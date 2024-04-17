@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neurodiffhub Equation Solver</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            width: 600px;
+            margin: auto;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+        }
+
+        .button-center {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #equation-preview, #ibcs-preview {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            min-height: 50px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        .dark-mode input, 
+        .dark-mode textarea, 
+        .dark-mode #equation-preview, 
+        .dark-mode #ibcs-preview {
+            background-color: #333;
+            color: white;
+            border-color: #666;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .column {
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        /* Ensure inputs take full width of the column */
+        .column input {
+            width: calc(100% - 20px); /* Adjusting for padding */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Enter Your Differential Equation</h1>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌞</button>
+        </div>
+        <form action="/submit-equation" method="post" onsubmit="return validateDomain()">
+            <div id="equation-container">
+                <label for="equation">Differential Equation (in LaTeX format):</label>
+                <textarea id="equation" name="equation" rows="4" placeholder="e.g., \frac{d^2y}{dx^2} + 2\frac{dy}{dx} + y = 0" class="hidden"></textarea>
+            </div>
+            <div id="equation-preview"></div>
+
+            <div class="row">
+                <div class="column">
+                    <label for="domain-start">Domain Start:</label>
+                    <input type="number" id="domain-start" name="domain_start" placeholder="Start">
+                </div>
+                <div class="column">
+                    <label for="domain-end">Domain End:</label>
+                    <input type="number" id="domain-end" name="domain_end" placeholder="End">
+                </div>
+            </div>
+
+            <div id="ibcs-container">
+                <label for="ibcs">Initial/Boundary Conditions (in LaTeX format):</label>
+                <textarea id="ibcs" name="ibcs" rows="2" placeholder="e.g., y(0) = 0, y'(1) = 1" class="hidden"></textarea>
+            </div>
+            <div id="ibcs-preview"></div>
+        </form>
+        <div class="button-center">
+            <button type="submit">Solve Equation</button>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview(inputId, previewId) {
+            var input = document.getElementById(inputId).value;
+            var preview = document.getElementById(previewId);
+            preview.innerText = `$$${input}$$`;
+            MathJax.typesetPromise([preview]);
+        }
+
+        function toggleInput(inputContainerId, inputId) {
+            var inputContainer = document.getElementById(inputContainerId);
+            var input = document.getElementById(inputId);
+            input.classList.toggle('hidden');
+            input.focus();
+        }
+
+        function toggleDarkMode() {
+            var toggleButton = document.querySelector('.dark-mode-toggle');
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                toggleButton.textContent = '🌜'; // Moon emoji for dark mode
+            } else {
+                toggleButton.textContent = '🌞'; // Sun emoji for light mode
+            }
+        }
+
+        function validateDomain() {
+            var start = parseFloat(document.getElementById('domain-start').value);
+            var end = parseFloat(document.getElementById('domain-end').value);
+
+            if (end <= start) {
+                alert('Domain end must be greater than domain start.');
+                return false;
+            }
+            return true;
+        }
+
+        document.getElementById("equation-preview").addEventListener('click', function() {
+            toggleInput('equation-container', 'equation');
+        });
+
+        document.getElementById("ibcs-preview").addEventListener('click', function() {
+            toggleInput('ibcs-container', 'ibcs');
+        });
+
+        document.getElementById("equation").addEventListener('input', function() {
+            updatePreview('equation', 'equation-preview');
+        });
+
+        document.getElementById("ibcs").addEventListener('input', function() {
+            updatePreview('ibcs', 'ibcs-preview');
+        });
+    </script>
+</body>
+</html>

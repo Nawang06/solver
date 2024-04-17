@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solver Selection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header-placeholder"></div>
+
+    <div class="top-bar">
+        <h1 class="heading">Select the Solver</h1>
+        <button id="settings-button" class="settings-button">⚙️</button>
+    </div>
+
+    <div id="settings-menu" class="settings-menu hidden">
+        <!-- Theme, color selectors, and lock option here -->
+        <div>
+            <label for="primary-color-picker">Primary Color:</label>
+            <input type="text" id="primary-color-picker" placeholder="#0afa9e">
+            <div class="color-preview" id="primary-color-preview"></div>
+        </div>
+        <div>
+            <label for="secondary-color-picker">Secondary Color:</label>
+            <input type="text" id="secondary-color-picker" placeholder="#e6e6fa">
+            <div class="color-preview" id="secondary-color-preview"></div>
+        </div>
+        <div class="checkbox-container">
+            <input type="checkbox" id="color-lock">
+            <label for="color-lock">Lock Colors</label>
+        </div>
+        <button id="theme-toggle" class="theme-toggle">🌞</button>
+        <button id="apply-settings" class="apply-button">Apply</button>
+    </div>
+
+    <div class="solver-grid">
+        <a href="Solver1D.html" class="solver-button">Solver1D</a>
+        <a href="Solver2D.html" class="solver-button">Solver2D</a>
+        <a href="SolverSpherical.html" class="solver-button">SolverSpherical</a>
+        <a href="BundleSolver1D.html" class="solver-button">BundleSolver1D</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
